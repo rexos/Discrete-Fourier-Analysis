@@ -1,0 +1,38 @@
+// Given an integer n compute the matrix representation of DFT in order 
+// to be applied to a function from a cyclic group Z/nZ to the complex
+// through matrix multiplication.
+// For the sake of simplicity I avoided to build the ideal nZ and also 
+// the quotient algebra Z/nZ, and insted i used (mod n)
+// It is computed on the generators of the Hilbert space L^2(Z/nZ).
+//Written by Alex Pellegrini
+
+// Generate the free complex plane
+C<i> := ComplexField();
+
+// The π
+pi := Pi(C);
+
+// Read n
+readi n, "Type the value of n: ";
+
+// w contains the n-th root of unity e^(2^pi/n)
+w := RootOfUnity(n); 
+
+// Metadata used to build the DFT matrix
+meta := [];
+
+// Loop over Z/nZ twice, once for each generator of L^2 and once so as
+// to compute the inner product <delta_k, e_x>
+for k in [0..n-1] do
+    tmp := [];
+    for x in [0..n-1] do
+    	tmp := Append(tmp, w^(x*k mod n));
+    end for;
+    meta := Append(meta,tmp);
+end for;
+
+// Finally build the matrix for a better output
+M := Matrix(meta);
+M;
+
+printf "\nWhere %o = e^(2*pi*i/%o)",w,n; 
